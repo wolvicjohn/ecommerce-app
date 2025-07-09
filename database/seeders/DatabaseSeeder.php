@@ -21,5 +21,14 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
         Product::factory(10)->create();
+
+        // create admin acct
+        User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@test.com',
+            'password' => bcrypt('adminpassword'),
+            'is_admin' => true,
+        ]);
+
     }
 }

@@ -13,7 +13,6 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::query()->orderBy('created_at', 'desc')->paginate();
-        // dd($products);
         return view('product.index', ['products'=> $products]);
     }
 
@@ -36,16 +35,14 @@ class ProductController extends Controller
             'price' => ['required', 'numeric', 'between:0,999999.99'],
             'category' => ['required','string'],
         ]);
-        $data['user_id'] = 1;
+
         try {
-    Product::create($data);
-    return redirect()->route('products.index')->with('message', 'New product added');
-} catch (\Throwable $e) {
-    \Log::error($e);
-    return back()->withErrors(['general' => 'Something went wrong.']);
-}
-
-
+            Product::create($data);        
+            return redirect()->route('products.index')->with('message', 'New product added');
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            return back()->withErrors(['general' => 'Something went wrong.']);
+        }
     }
 
     /**
