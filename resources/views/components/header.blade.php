@@ -1,28 +1,4 @@
 <header>
-    @php
-    $cartCount = \App\Http\Controllers\CartController::getCartCount();
-    @endphp
-   
-     {{-- add product btn show only for admin --}}
-        @auth
-            @if (auth()->user()->isAdmin())
-                <a href="{{ route('products.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded">
-                    Add Product
-                </a>
-            @else
-                <a href="{{ route('carts.index') }}" class="cart-btn">
-                    <i class="fa fa-shopping-cart"></i>
-                    <span id="cart-counter">{{ $cartCount }}</span>
-                </a>
-            @endif
-        @endauth
-
-        @guest
-            <a href="{{ route('carts.index') }}" class="cart-btn">
-                <i class="fa fa-shopping-cart"></i>
-                <span id="cart-counter">{{ $cartCount }}</span>
-            </a>
-        @endguest
     @if (Route::has('login'))
         <nav class="flex items-center justify-end gap-4">
             @auth

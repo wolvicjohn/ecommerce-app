@@ -20,7 +20,10 @@ class ProductController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
+    {   
+        if (!auth()->check() || !auth()->user()->is_admin) {
+            abort(403);
+        }
         return view('product.create');
     }
 
@@ -34,15 +37,15 @@ class ProductController extends Controller
             'quantity' => ['required','integer'],
             'price' => ['required', 'numeric', 'between:0,999999.99'],
             'category' => ['required','string'],
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
-        try {
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('product_images', 'public');
+            $data['image'] = $imagePath;
+        }
             Product::create($data);        
             return redirect()->route('products.index')->with('message', 'New product added');
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            return back()->withErrors(['general' => 'Something went wrong.']);
-        }
+    
     }
 
     /**
@@ -73,7 +76,11 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Product $product)
-    {
-        //
+    {   
+        if (!auth()->check() || !auth()->user()->is_admin) {
+            abort(403);
+        }
+        $product->delete();
+        return redirect()->back()->with('success', 'Product deleted successfully.');
     }
 }

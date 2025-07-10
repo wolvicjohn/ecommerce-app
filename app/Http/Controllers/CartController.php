@@ -60,7 +60,7 @@ class CartController extends Controller
                     ]);
                 }
             } 
-        // not loggedin
+            // not loggedin
             else {
                 $cart = session()->get('cart', []);
 
@@ -90,6 +90,15 @@ class CartController extends Controller
             }
 
         return back()->with('message', 'Product added to cart!');
+
+        // store transaction in history
+        foreach ($cart as $productId => $details) {
+            Order::create([
+                'user_id' => auth()->id(),
+                'product_id' => $productId,
+                'quantity' => $details['quantity'],
+            ]);
+        }
 
     }
 
@@ -127,18 +136,18 @@ class CartController extends Controller
 
     // cart counter
     public static function getCartCount()
-{
-    if (auth()->check()) {
-        return Cart::where('user_id', auth()->id())->sum('quantity');
-    } else {
-        $cart = session('cart', []);
-        $count = 0;
-        foreach ($cart as $item) {
-            $count += $item['quantity'];
+    {
+        if (auth()->check()) {
+            return Cart::where('user_id', auth()->id())->sum('quantity');
+        } else {
+            $cart = session('cart', []);
+            $count = 0;
+            foreach ($cart as $item) {
+                $count += $item['quantity'];
+            }
+            return $count;
+            
         }
-        return $count;
-        
     }
-}
 
 }
