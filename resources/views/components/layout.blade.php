@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>PC SHOP</title>
+        <title>TECHSTORE</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -28,14 +28,23 @@
 
 
 
-     <x-header />
-     {{-- content page --}}
-    {{ $slot }}
+     <div class="flex flex-col min-h-screen">
+        <x-header />
+
+        <main class="flex-grow">
+            {{ $slot }}
+        </main>
+
+        <footer class="bg-gray-800 text-white text-center py-4">
+            <p>&copy; {{ date('Y') }} PC SHOP.</p>
+        </footer>
+    </div>
+
     </body>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        
+        // add product ajax
         $(document).ready(function () {
             $('.add-to-cart-form').on('submit', function (e) {
                 e.preventDefault();
@@ -89,7 +98,6 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         document.getElementById('checkout-form').submit();
-                        window.location.href = "{{ route('homepage') }}";
                     }
                 });
             @else
@@ -106,6 +114,53 @@
             @endif
         });
     }
+    // cancel item in cart
+    document.addEventListener('DOMContentLoaded', function () {
+        const cancelButtons = document.querySelectorAll('.cancel-item-btn');
+
+        cancelButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to remove this item from your cart?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, remove it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.closest('form').submit();
+                    }
+                });
+            });
+        });
+    });
+
+    // remove category
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteForms = document.querySelectorAll('.delete-form');
+
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); 
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This will delete the category permanently.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); 
+                    }
+                });
+            });
+        });
+    });
 
     </script>
 

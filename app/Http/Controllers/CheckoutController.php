@@ -24,9 +24,9 @@ class CheckoutController extends Controller
 
         $cartItems = Cart::where('user_id', $userId)->get();
 
-        if ($cartItems->isEmpty()) {
-            return redirect()->route('checkout.index')->with('error', 'Cart is empty.');
-        }
+        // if ($cartItems->isEmpty()) {
+        //     return redirect()->route('products.index');
+        // }
 
         foreach ($cartItems as $item) {
             Order::create([

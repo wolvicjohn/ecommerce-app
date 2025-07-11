@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -12,8 +13,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::query()->orderBy('created_at', 'desc')->paginate();
-        return view('product.index', ['products'=> $products]);
+         $categories = Category::with('products')->get();
+         return view('product.index', compact('categories'));
+        // $products = Product::with('category')->orderBy('created_at', 'desc')->paginate(9);
+        // return view('product.index', ['products' => $products]);
+
+        
     }
 
     /**
@@ -21,6 +26,9 @@ class ProductController extends Controller
      */
     public function create()
     {   
+        $categories = Category::all();
+        return view('product.create', compact('categories'));
+
         if (!auth()->check() || !auth()->user()->is_admin) {
             abort(403);
         }
@@ -36,8 +44,8 @@ class ProductController extends Controller
             'productname' => ['required','string'],
             'quantity' => ['required','integer'],
             'price' => ['required', 'numeric', 'between:0,999999.99'],
-            'category' => ['required','string'],
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'category_id' => ['required', 'exists:categories,id'], 
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('product_images', 'public');

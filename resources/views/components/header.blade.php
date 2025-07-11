@@ -1,11 +1,17 @@
-<header>
+<header class="w-full bg-white">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-left: 100px;">
+        <div style="justify-content: space-between;">
+            <a href="{{ route('homepage') }}" class="flex items-center gap-2 text-sm font-medium text-black hover:underline">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 w-100">
+            </a>
+        </div>
     @if (Route::has('login'))
-        <nav class="flex items-center justify-end gap-4">
+        <nav>
             @auth
-                <div class="relative ml-3">
-                    <x-dropdown align="right" width="48">
+                <div style="padding-right: 100px">
+                    <x-dropdown>
                         <x-slot name="trigger">
-                            <button class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none transition duration-150 ease-in-out">
+                            <button class="flex items-center text-bg font-medium text-gray-700 hover:text-gray-900 focus:outline-none transition duration-150 ease-in-out">
                                 <div>{{ Auth::user()->name }}</div>
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
@@ -48,4 +54,5 @@
             @endauth
         </nav>
     @endif
+    </div>
 </header>

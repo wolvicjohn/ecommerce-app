@@ -150,4 +150,15 @@ class CartController extends Controller
         }
     }
 
+    public function removeGuestItem(Request $request)
+    {
+        $productId = $request->input('product_id');
+        $cart = session()->get('cart', []);
+        unset($cart[$productId]);
+        session()->put('cart', $cart);
+
+        return redirect()->back()->with('message', 'Item removed from cart.');
+    }
+
+
 }
