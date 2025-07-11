@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -15,14 +16,15 @@ class CartController extends Controller
     {
         if (auth()->check()) {
             $cartItems = Cart::with('product')
-            ->where('user_id', auth()->id())
-            ->get();
+                ->where('user_id', auth()->id())
+                ->get();
         } else {
-            $cartItems = session()->get('cart', []);
+            $cartItems = session()->get('cart', []); 
         }
 
         return view('cart.index', compact('cartItems'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -131,7 +133,13 @@ class CartController extends Controller
      */
     public function destroy(Cart $cart)
     {
-        //
+        if ($cart->user_id !== Auth::id()) {
+        abort(403, 'Unauthorized action.');
+        }
+
+        $cart->delete();
+
+        return redirect()->route('carts.index')->with('message', 'Item removed from cart.');
     }
 
     // cart counter

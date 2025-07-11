@@ -17,6 +17,7 @@ Route::get('/dashboard', [ProductController::class, 'index'])
     ->name('dashboard');
 
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/history', [HistoryController::class, 'index'])->name('history.index');

@@ -13,10 +13,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-         $categories = Category::with('products')->get();
-         return view('product.index', compact('categories'));
-        // $products = Product::with('category')->orderBy('created_at', 'desc')->paginate(9);
-        // return view('product.index', ['products' => $products]);
+        $categories = Category::with(['products' => function ($query) {
+                $query->where('quantity', '>', 0);
+            }])->get();
+
+            return view('product.index', compact('categories'));
 
         
     }

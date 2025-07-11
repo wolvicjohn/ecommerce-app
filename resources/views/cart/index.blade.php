@@ -19,10 +19,10 @@
                         <p class="text-md text-gray-700 font-semibold mb-2">
                             Subtotal: ₱{{ number_format($item->product->price * $item->quantity, 2) }}
                         </p>
-                        <form action="{{ route('carts.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Remove this item?')">
+                        <form action="{{ route('carts.destroy', $item->id) }}" method="POST" class="delete-cart-item-form">
                             @csrf
                             @method('DELETE')
-                            <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 border border-red-500 rounded hover:bg-red-100 transition">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 border border-red-500 rounded hover:bg-red-100 transition">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
@@ -32,7 +32,13 @@
                     </div>
                 </div>
             @empty
-                <p class="text-gray-500">Your cart is empty.</p>
+                <div class="text-center text-gray-400 mt-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-20 w-20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m10-9l2 9m-6-9v9" />
+                        </svg>
+                        <p class="text-xl">Your cart is empty. Shop now!</p>
+                    </div>
             @endforelse
 
         @else
@@ -65,7 +71,13 @@
                     </div>
                 </div>
             @empty
-                <p class="text-gray-500">Your cart is empty.</p>
+                <div class="text-center text-gray-400 mt-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-20 w-20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m10-9l2 9m-6-9v9" />
+                        </svg>
+                        <p class="text-xl">Your cart is empty. Shop now!</p>
+                    </div>
             @endforelse
         @endif
     </div>
@@ -75,12 +87,11 @@
     <div style="display: flex; justify-content: center">
         @if(count($cartItems) > 0)
             @auth
-                <form id="checkout-form" action="{{ route('checkout.store') }}" method="POST">
-                    @csrf
-                    <button id="checkout-btn" type="submit" class="mt-6 px-6 py-2 bg-green-600 text-white rounded">
-                        Place Order
+                <a href="{{ route('checkout.index') }}">
+                    <button id="go-to-checkout-btn" type="button" class="mt-6 px-6 py-2 bg-blue-600 text-white rounded">
+                        Go to Checkout
                     </button>
-                </form>
+                </a>
             @else
                 @php
                     session(['url.intended' => route('carts.index')]);
